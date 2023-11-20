@@ -6,10 +6,10 @@ server:
       force: true
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/todoja?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mariadb://localhost:3306/todoja?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: jeonga
     password: test1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
   thymeleaf:
     cache: false
   mvc:
@@ -19,7 +19,7 @@ spring:
     ansi:
       enabled: always
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
     open-in-view: false
     show-sql: true
     hibernate:
