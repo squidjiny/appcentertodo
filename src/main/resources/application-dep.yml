@@ -24,5 +24,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-
-
+springdoc:
+  swagger-ui:
+    base-url: http://localhost:5154/swagger-ui.html
