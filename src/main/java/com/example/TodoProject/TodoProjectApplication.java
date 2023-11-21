@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 
-@OpenAPIDefinition(servers = {@Server(url = "http://jeonga.na2ru2.me/", description = "기본서버"),
+@OpenAPIDefinition(servers = {@Server(url = "http://jeonga:5154", description = "기본서버"),
                                 @Server(url = "/", description = "Development Server URL")})
 @EnableJpaAuditing
 @SpringBootApplication
