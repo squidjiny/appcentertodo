@@ -22,7 +22,7 @@ public class Workaround implements WebMvcOpenApiTransformationFilter {
 
         Server testServer = new Server();
         testServer.setDescription("test");
-        testServer.setUrl("https://jeonga:5154");
+        testServer.setUrl("https://jeonga");
         openApi.setServers(Arrays.asList(localServer, testServer));
         return openApi;
     }
