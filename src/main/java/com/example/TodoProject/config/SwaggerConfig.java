@@ -23,7 +23,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         Server serverLocal = new Server("local", "http://localhost:8080", "for local usage", Collections.emptyList(), Collections.emptyList());
-        Server testServer = new Server("test", "https://jeonga:5154", "for testing", Collections.emptyList(), Collections.emptyList());
+        Server testServer = new Server("test", "https://jeonga.na2ru2.me:5154", "for testing", Collections.emptyList(), Collections.emptyList());
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .select()
