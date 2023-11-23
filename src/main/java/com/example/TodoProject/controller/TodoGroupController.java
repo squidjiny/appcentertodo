@@ -78,7 +78,7 @@ public class TodoGroupController {
     }
 
     @Operation(summary = "투두 그룹을 가지고 있는 투두 전체 조회", description = "투두 그룹 조회를 하는 컨트롤러")
-    @PostMapping("/{clientnum}")
+    @GetMapping("/todolist/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공", content = @Content(schema = @Schema(implementation = ResponseTodoGroupListDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자입니다.")
