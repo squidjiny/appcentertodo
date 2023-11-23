@@ -54,4 +54,11 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    public void deleteClient(Long clientId){
+        Client client = clientRepository.findByClientNum(clientId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
+
+        clientRepository.delete(client);
+    }
+
 }

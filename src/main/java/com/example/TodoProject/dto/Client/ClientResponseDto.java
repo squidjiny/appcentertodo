@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.Column;
+import java.util.List;
 
 public class ClientResponseDto {
 
@@ -57,6 +58,11 @@ public class ClientResponseDto {
         @Schema(example = "2", description = "유저의 데이터베이스 상 번호가 들어감니다.")
         private String clientNum;
 
+    }
+
+    @Getter
+    public static class ResponseClientListDto{
+        private List<ResponseClientDto> data;
     }
 
 }
