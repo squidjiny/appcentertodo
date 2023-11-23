@@ -6,7 +6,7 @@ server:
       force: true
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/todoja?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mariadb://localhost:3306/jeonga?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: jeonga
     password: test1234
     driver-class-name: org.mariadb.jdbc.Driver

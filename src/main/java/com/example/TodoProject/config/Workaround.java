@@ -16,13 +16,17 @@ public class Workaround implements WebMvcOpenApiTransformationFilter {
     @Override
     public OpenAPI transform(OpenApiTransformationContext<HttpServletRequest> context) {
         OpenAPI openApi = context.getSpecification();
-        Server localServer = new Server();
-        localServer.setDescription("local");
-        localServer.setUrl("http://localhost:8080");
 
         Server testServer = new Server();
         testServer.setDescription("test");
         testServer.setUrl("http://jeonga.na2ru2.me/");
+
+
+        Server localServer = new Server();
+        localServer.setDescription("local");
+        localServer.setUrl("http://localhost:8080");
+
+
         openApi.setServers(Arrays.asList(localServer, testServer));
         return openApi;
     }

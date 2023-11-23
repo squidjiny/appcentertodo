@@ -1,9 +1,13 @@
 package com.example.TodoProject.controller;
 
 import com.example.TodoProject.common.CommonResponse;
+import com.example.TodoProject.dto.Client.ClientResponseDto;
 import com.example.TodoProject.dto.CommonResponseDto;
 import com.example.TodoProject.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +50,7 @@ public class TodoController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 투두 그룹입니다."),
             @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
+
     public ResponseEntity<CommonResponseDto> createTodo(Long clientNum, @Valid @RequestBody RequestTodoDto requestTodoDto){
 
         if(requestTodoDto.getTodoGroupNum() == null){
@@ -54,7 +59,7 @@ public class TodoController {
             todoService.saveForTodoGroup(clientNum, requestTodoDto);
         }
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두리스트 생성 성공", "null"));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두리스트 생성 성공", null));
     }
 
     //투두 수정하기
@@ -73,16 +78,19 @@ public class TodoController {
         else{
             todoService.editTodoForTodoGroup(todonum, requestTodoDto);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 수정 성공", "null"));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 수정 성공", null));
     }
 
     //투두 삭제하기
     @Operation(summary = "투두 삭제하기", description = "todoNum을 파라미터로 받음. 투두를 영구 삭제한다.")
     @DeleteMapping("/{todonum}")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "투두 삭제 성공"),
+            @ApiResponse(responseCode = "200", description = "투두 삭제 성공",content = @Content(schema = @Schema(implementation = ResponseTodoDeleteDto.class))),
             @ApiResponse(responseCode= "400", description = "존재하지 않는 투두입니다."),
     })
+    @io.swagger.annotations.ApiResponses(
+            @io.swagger.annotations.ApiResponse(code = 200, message = "투두 삭제 성공", response = ResponseTodoDeleteDto.class)
+    )
     public ResponseEntity<CommonResponseDto> deleteTodo(@PathVariable Long todonum){
         todoService.deleteTodo(todonum);
         return ResponseEntity.status(HttpStatus.OK)
@@ -92,9 +100,12 @@ public class TodoController {
     @PostMapping ("/{clientnum}/{keyword}")
     @Operation(summary = "투두 제목 검색하기", description = "투두를 검색하는 기능이다. keyword가 포함되어있는 제목의 투두를 모두 출력한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "검색 성공"),
+            @ApiResponse(responseCode = "200", description = "투두 검색 성공"),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다.")
     })
+    @io.swagger.annotations.ApiResponses(
+            @io.swagger.annotations.ApiResponse(code = 200, message = "투두 검색 성공", response = ResponseTodoDto.class, responseContainer = "LIST")
+    )
     public ResponseEntity<CommonResponseDto> getTodoSearch(@PathVariable Long clientnum, @PathVariable String keyword) {
         List<ResponseTodoDto> todos = todoService.getUsersAllTodos(clientnum);
         List<ResponseTodoDto> matchingTodos = todos.stream()
