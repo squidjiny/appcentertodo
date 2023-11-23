@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
+import java.util.List;
 
 public class TodoResponseDto {
     @Getter
@@ -51,5 +52,12 @@ public class TodoResponseDto {
         @Schema(example = "2",description = "투두 번호")
         private long data;
     }
+
+    @Getter
+    public static class ResponseListDto{
+        private List<ResponseTodoDto> data;
+    }
+
+
 
 }

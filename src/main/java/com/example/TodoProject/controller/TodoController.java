@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -100,11 +100,11 @@ public class TodoController {
     @PostMapping ("/{clientnum}/{keyword}")
     @Operation(summary = "투두 제목 검색하기", description = "투두를 검색하는 기능이다. keyword가 포함되어있는 제목의 투두를 모두 출력한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "투두 검색 성공"),
+            @ApiResponse(responseCode = "200", description = "투두 검색 성공", content = @Content(schema = @Schema(implementation = ResponseListDto.class))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다.")
     })
     @io.swagger.annotations.ApiResponses(
-            @io.swagger.annotations.ApiResponse(code = 200, message = "투두 검색 성공", response = ResponseTodoDto.class, responseContainer = "LIST")
+            @io.swagger.annotations.ApiResponse(code = 200, message = "투두 검색 성공", response = ResponseListDto.class)
     )
     public ResponseEntity<CommonResponseDto> getTodoSearch(@PathVariable Long clientnum, @PathVariable String keyword) {
         List<ResponseTodoDto> todos = todoService.getUsersAllTodos(clientnum);
@@ -125,15 +125,18 @@ public class TodoController {
     public ResponseEntity<CommonResponseDto> toggleTodo(@PathVariable Long todonum){
         todoService.toggleTodo(todonum);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS,"토글 성공", "null"));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS,"토글 성공", null));
     }
 
 
     @Operation(summary = "투두 그룹을 가지고 있지 않은 투두 전체 조회", description = "투두 그룹 조회를 하는 컨트롤러")
     @PostMapping("/{clientnum}")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공")
+            @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공", content = @Content(schema = @Schema(implementation = ResponseListDto.class)))
     })
+    @io.swagger.annotations.ApiResponses(
+            @io.swagger.annotations.ApiResponse(code = 200, message = "투두 검색 성공", response = ResponseListDto.class)
+    )
     public ResponseEntity<CommonResponseDto> getAllTodosNotTodoGroup(@PathVariable Long clientnum){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoService.getAllTodosForNotTodoGroup(clientnum)));

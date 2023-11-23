@@ -90,7 +90,7 @@ public class ClientController {
 
         LOGGER.info("[editUser] 회원정보수정");
         clientService.editClient(clientnum, editClientDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", "null"));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", null));
     }
 
 
