@@ -17,13 +17,14 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      
-      - name: Setup MariaDB
-        uses: samin/mysql-action@v1
+
+      - name: Set mySQL
+      - uses: mirromutth/mysql-action@v1.1
         with:
-          character set server: 'utf8'
+          host port: 3333
+          container port: 3306
           mysql database: 'jeonga'
-          mysql user: 'jeonga'
+          mysql name: 'jeonga'
           mysql password: 'test1234'
       
       - name: Setup Gradle
