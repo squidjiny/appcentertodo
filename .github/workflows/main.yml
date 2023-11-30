@@ -8,19 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    services:
-      mariadb:
-        image: mariadb:latest
-        env:
-          MYSQL_ROOT_PASSWORD: 1234
-          MYSQL_DATABASE: jeonga
-          MYSQL_USER: jeonga
-          MYSQL_PASSWORD: test1234
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-        
+    runs-on: ubuntu-latest   
     steps:
       - uses: actions/checkout@v1
 
@@ -29,13 +17,13 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      
-      # - name: Setup MariaDB
-      #   uses: samin/mysql-action@v1
+
+      # - uses: mirromutth/mysql-action@v1.1
       #   with:
-      #     character set server: 'utf8'
+      #     host port: 3333
+      #     container port: 3306
       #     mysql database: 'jeonga'
-      #     mysql user: 'jeonga'
+      #     mysql name: 'jeonga'
       #     mysql password: 'test1234'
       
       - name: Setup Gradle
