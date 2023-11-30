@@ -18,7 +18,6 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Set mySQL
       - uses: mirromutth/mysql-action@v1.1
         with:
           host port: 3333
