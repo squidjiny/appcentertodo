@@ -37,7 +37,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    //testImplementation 'com.h2database:h2'
+    testImplementation 'org.mariadb.jdbc:mariadb-java-client:2.7.11'
 }
 
 tasks.named('test') {
