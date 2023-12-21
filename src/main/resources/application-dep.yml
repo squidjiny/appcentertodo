@@ -5,6 +5,8 @@ server:
       charset: utf-8
       force: true
 spring:
+  jwt:
+    secret: h7J2jZ4Bp8WvE9RfTcYvD1QaL6OzXsCmIuN5rFwTgPqM1eCvK9jX4eTcYvU3xS6z
   datasource:
     url: jdbc:mariadb://localhost:3306/jeonga?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: jeonga
