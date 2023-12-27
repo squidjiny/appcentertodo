@@ -55,15 +55,18 @@ public class ClientService {
     }
 
 
-    public void editClient(Long clientId, EditClientDto editClientDto){
-        Client client = clientRepository.findByClientNum(clientId)
+    public void editClient(String token, EditClientDto editClientDto){
+        Long clientNum = jwtProvider.getClientNum(token);
+        log.info("야 좀 되바라... clientnum = {}", clientNum);
+        Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
         client.editUser(editClientDto);
         clientRepository.save(client);
     }
 
-    public void deleteClient(Long clientId){
-        Client client = clientRepository.findByClientNum(clientId)
+    public void deleteClient(String token){
+        Long clientNum = jwtProvider.getClientNum(token);
+        Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
         clientRepository.delete(client);
     }
@@ -76,7 +79,7 @@ public class ClientService {
             throw new LoginErrorException("아이디 혹은 비밀번호가 틀렸습니다.");
         }
         else{
-            String token = jwtProvider.createToken(client.getClientNum(), client.getClientRole());
+            String token = jwtProvider.createToken(client.getClientId(),client.getClientNum(), client.getClientRole());
             log.info("토큰 생성 완료. 토큰: {}", token);
             return token;
         }

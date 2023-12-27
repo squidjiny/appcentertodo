@@ -2,6 +2,7 @@ package com.example.TodoProject.service;
 
 import com.example.TodoProject.config.ex.NotFoundElementException;
 import com.example.TodoProject.config.ex.NotRightThisObject;
+import com.example.TodoProject.config.security.JwtProvider;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -30,15 +31,19 @@ public class TodoService {
 
     private final TodoGroupRepository todoGroupRepository;
 
+    private final JwtProvider jwtProvider;
+
     @Autowired
-    public TodoService(TodoRepository todoRepository, ClientRepository clientRepository, TodoGroupRepository todoGroupRepository){
+    public TodoService(JwtProvider jwtProvider, TodoRepository todoRepository, ClientRepository clientRepository, TodoGroupRepository todoGroupRepository){
+        this.jwtProvider = jwtProvider;
         this.clientRepository = clientRepository;
         this.todoRepository = todoRepository;
         this.todoGroupRepository = todoGroupRepository;
     }
 
 
-    public void CreateTodo(Long clientNum, RequestTodoDto requestTodoDto) {
+    public void CreateTodo(String token, RequestTodoDto requestTodoDto) {
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[saveForTodoGroup]투두 저장중. 사용자 id: {} , 투두 제목: {}",clientNum ,requestTodoDto.getTodoTitle());
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
@@ -60,8 +65,8 @@ public class TodoService {
     }
 
 
-    public void editTodo(Long clientNum ,Long todoNum, RequestTodoDto requestTodoDto){
-
+    public void editTodo(String token ,Long todoNum, RequestTodoDto requestTodoDto){
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[editTodo] 투두 소유주 확인");
         Client client = clientRepository.findByClientNum(clientNum)
                         .orElseThrow(()-> new NotFoundElementException("존재하지 않는 유저입니다."));
@@ -94,7 +99,8 @@ public class TodoService {
         todoRepository.save(todo);
     }
 
-    public void deleteTodo(Long clientNum, Long todoNum){
+    public void deleteTodo(String token, Long todoNum){
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[deleteTodo] 투두 소유주 확인");
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(()-> new NotFoundElementException("존재하지 않는 유저입니다."));
@@ -109,7 +115,8 @@ public class TodoService {
         log.info("[deleteTodo] 투두 삭제완료. todo id: {}", todoNum);
     }
 
-    public List<ResponseTodoDto> getUsersSearchTodos(Long clientNum, String keyword) {
+    public List<ResponseTodoDto> getUsersSearchTodos(String token, String keyword) {
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[getUsersAllTodos] 그 유저의 투두 전체소환. client Num: {}", clientNum);
 
         List<Todo> todos = todoRepository.findAllByClientClientNumAndTodoTitleContains(clientNum, keyword);
@@ -121,7 +128,8 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResponseTodoDto> getAllTodosForNotTodoGroup(Long clientNum){
+    public List<ResponseTodoDto> getAllTodosForNotTodoGroup(String token){
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[getAllTodosForNotTodoGroup] 투두 그룹이 없는 투두 전체 소환. clientNum id: {}", clientNum);
         clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));

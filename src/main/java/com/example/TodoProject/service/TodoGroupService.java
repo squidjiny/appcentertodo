@@ -3,6 +3,7 @@ package com.example.TodoProject.service;
 
 import com.example.TodoProject.config.ex.NotFoundElementException;
 import com.example.TodoProject.config.ex.NotRightThisObject;
+import com.example.TodoProject.config.security.JwtProvider;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -32,13 +33,17 @@ public class TodoGroupService {
 
     private final TodoService todoService;
 
+    private final JwtProvider jwtProvider;
+
     @Autowired
-    public TodoGroupService(ClientRepository clientRepository, TodoGroupRepository todoGroupRepository, TodoService todoService){
+    public TodoGroupService(JwtProvider jwtProvider, ClientRepository clientRepository, TodoGroupRepository todoGroupRepository, TodoService todoService){
+        this.jwtProvider = jwtProvider;
         this.clientRepository = clientRepository;
         this.todoGroupRepository = todoGroupRepository;
         this.todoService = todoService;
     }
-    public Long saveTodoGroup(Long clientNum, RequestTodoGroupDto requestTodoGroupDto){
+    public Long saveTodoGroup(String token, RequestTodoGroupDto requestTodoGroupDto){
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[saveTodoGroup] 투두 그룹 생성중");
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 사용자입니다."));
@@ -47,7 +52,9 @@ public class TodoGroupService {
         return todoGroup.getGroupNum();
     }
 
-    public void editTodoGroup(Long clientNum, Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
+    public void editTodoGroup(String token, Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
+        Long clientNum = jwtProvider.getClientNum(token);
+
         log.info("투두 그룹의 소유주가 맞는지 확인 작업 시작");
 
         Client client = clientRepository.findByClientNum(clientNum)
@@ -65,7 +72,8 @@ public class TodoGroupService {
         log.info("[editTodoGroup] 투두 그룹 수정완료");
     }
 
-    public List<ResponseTodoGroupDto> getAllTodoGroup(Long clientNum){
+    public List<ResponseTodoGroupDto> getAllTodoGroup(String token){
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[getAllTodoGroup] 유저가 가지고 있는 전체 투두그룹을 데이터베이스에서 가져오는 작업");
 
         clientRepository.findByClientNum(clientNum)
@@ -85,7 +93,8 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public void deleteTodoGroup(Long clientNum, Long TodoGroupNum){
+    public void deleteTodoGroup(String token, Long TodoGroupNum){
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[deleteTodoGroup] 투두 그룹 삭제");
         log.info("[deleteTodoGroup] (1) 투두 그룹 실존여부 확인");
         TodoGroup todoGroup = todoGroupRepository.getByGroupNum(TodoGroupNum)
@@ -115,7 +124,8 @@ public class TodoGroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<TodoListDto> getAllTodoForTodoGroup(Long clientNum){
+    public List<TodoListDto> getAllTodoForTodoGroup(String token){
+        Long clientNum = jwtProvider.getClientNum(token);
         log.info("[getAllTodoForTodoGroup] 유저가 가지고 있는 투두 그룹의 전체 투두 소환");
 
         clientRepository.findByClientNum(clientNum)
