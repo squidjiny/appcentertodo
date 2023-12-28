@@ -47,11 +47,14 @@ public class ClientService {
     }
     public void signUp(RequestClientDto requestClientDto){
         log.info("[signUp] 회원 가입 정보 전달");
-        clientRepository.findByClientId(requestClientDto.getClientId())
-                .ifPresent(client -> {throw new DuplicatedException("중복된 아이디입니다.");});
+        if(clientRepository.findByClientId(requestClientDto.getClientId()).isPresent()){
+            throw new DuplicatedException("중복된 아이디입니다.");
+        }
+        else{
+            clientRepository.save(requestClientDto.toEntity(requestClientDto,  passwordEncoder.encode(requestClientDto.getClientPassword())));
+            log.info("[signUp] 회원 가입 성공. client Num: {}", requestClientDto.getClientId());
+        }
 
-        clientRepository.save(requestClientDto.toEntity(requestClientDto,  passwordEncoder.encode(requestClientDto.getClientPassword())));
-        log.info("[signUp] 회원 가입 성공. client Num: {}", requestClientDto.getClientId());
     }
 
 
@@ -90,8 +93,9 @@ public class ClientService {
 
     public void duplicationCheck(String clientId){
         log.info("[duplicationCheck] 아이디 중복 확인");
-        clientRepository.findByClientId(clientId)
-                .ifPresent(client -> {throw new DuplicatedException("중복된 아이디입니다.");});
+        if(clientRepository.findByClientId(clientId).isPresent()){
+            throw new DuplicatedException("중복된 아이디입니다.");
+        }
         log.info("[duplicationCheck] 사용 가능한 아이디입니다.");
 
     }
