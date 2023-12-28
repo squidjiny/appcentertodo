@@ -48,7 +48,7 @@ public class ClientService {
     public void signUp(RequestClientDto requestClientDto){
         log.info("[signUp] 회원 가입 정보 전달");
         clientRepository.findByClientId(requestClientDto.getClientId())
-                .ifPresent(client -> new DuplicatedException("중복된 아이디입니다."));
+                .ifPresent(client -> {throw new DuplicatedException("중복된 아이디입니다.");});
 
         clientRepository.save(requestClientDto.toEntity(requestClientDto,  passwordEncoder.encode(requestClientDto.getClientPassword())));
         log.info("[signUp] 회원 가입 성공. client Num: {}", requestClientDto.getClientId());
@@ -56,8 +56,9 @@ public class ClientService {
 
 
     public void editClient(String token, EditClientDto editClientDto){
+        log.info("[editClient] 토큰에서 유저 정보 추출");
         Long clientNum = jwtProvider.getClientNum(token);
-        log.info("야 좀 되바라... clientnum = {}", clientNum);
+        log.info("[editClient] 토큰에서 유저 정보 추출 성공. clientnum = {}", clientNum);
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
         client.editUser(editClientDto);
@@ -65,7 +66,9 @@ public class ClientService {
     }
 
     public void deleteClient(String token){
+        log.info("[deleteClient] 토큰에서 유저 정보 추출");
         Long clientNum = jwtProvider.getClientNum(token);
+        log.info("[deleteClient] 토큰에서 유저 정보 추출 성공. clientnum = {}", clientNum);
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
         clientRepository.delete(client);
@@ -83,6 +86,14 @@ public class ClientService {
             log.info("토큰 생성 완료. 토큰: {}", token);
             return token;
         }
+    }
+
+    public void duplicationCheck(String clientId){
+        log.info("[duplicationCheck] 아이디 중복 확인");
+        clientRepository.findByClientId(clientId)
+                .ifPresent(client -> {throw new DuplicatedException("중복된 아이디입니다.");});
+        log.info("[duplicationCheck] 사용 가능한 아이디입니다.");
+
     }
 
 }

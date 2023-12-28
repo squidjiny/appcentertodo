@@ -43,7 +43,9 @@ public class TodoGroupService {
         this.todoService = todoService;
     }
     public Long saveTodoGroup(String token, RequestTodoGroupDto requestTodoGroupDto){
+        log.info("[SaveTodoGroup] 토큰에서 유저 정보 추출");
         Long clientNum = jwtProvider.getClientNum(token);
+        log.info("[SaveTodoGroup] 토큰에서 유저 정보 추출 성공. clientnum = {}", clientNum);
         log.info("[saveTodoGroup] 투두 그룹 생성중");
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 사용자입니다."));
@@ -53,7 +55,9 @@ public class TodoGroupService {
     }
 
     public void editTodoGroup(String token, Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
+        log.info("[editTodoClient] 토큰에서 유저 정보 추출");
         Long clientNum = jwtProvider.getClientNum(token);
+        log.info("[editTodoClient] 토큰에서 유저 정보 추출 성공. clientnum = {}", clientNum);
 
         log.info("투두 그룹의 소유주가 맞는지 확인 작업 시작");
 
@@ -73,7 +77,10 @@ public class TodoGroupService {
     }
 
     public List<ResponseTodoGroupDto> getAllTodoGroup(String token){
+        log.info("[getAllTodoGroup] 토큰에서 유저 정보 추출");
         Long clientNum = jwtProvider.getClientNum(token);
+        log.info("[getAllTodoGroup] 토큰에서 유저 정보 추출 성공. clientnum = {}", clientNum);
+
         log.info("[getAllTodoGroup] 유저가 가지고 있는 전체 투두그룹을 데이터베이스에서 가져오는 작업");
 
         clientRepository.findByClientNum(clientNum)
@@ -94,8 +101,11 @@ public class TodoGroupService {
 
     @Transactional
     public void deleteTodoGroup(String token, Long TodoGroupNum){
+        log.info("[deleteTodoGroup] 토큰에서 유저 정보 추출");
         Long clientNum = jwtProvider.getClientNum(token);
-        log.info("[deleteTodoGroup] 투두 그룹 삭제");
+        log.info("[deleteTodoGroup] 토큰에서 유저 정보 추출 성공. clientnum = {}", clientNum);
+
+        log.info("[deleteTodoGroup] 투두 그룹 삭제 시작");
         log.info("[deleteTodoGroup] (1) 투두 그룹 실존여부 확인");
         TodoGroup todoGroup = todoGroupRepository.getByGroupNum(TodoGroupNum)
                         .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두 그룹입니다."));
@@ -125,7 +135,10 @@ public class TodoGroupService {
 
     @Transactional(readOnly = true)
     public List<TodoListDto> getAllTodoForTodoGroup(String token){
+        log.info("[getAllTodoForTodoGroup] 토큰에서 유저 정보 추출");
         Long clientNum = jwtProvider.getClientNum(token);
+        log.info("[getAllTodoForTodoGroup] 토큰에서 유저 정보 추출 성공. clientnum = {}", clientNum);
+
         log.info("[getAllTodoForTodoGroup] 유저가 가지고 있는 투두 그룹의 전체 투두 소환");
 
         clientRepository.findByClientNum(clientNum)

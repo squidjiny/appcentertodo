@@ -52,7 +52,7 @@ public class TodoController {
     })
     public ResponseEntity<CommonResponseDto> createTodo(@RequestHeader("X-AUTH-TOKEN") String token, @Valid @RequestBody RequestTodoDto requestTodoDto){
 
-        todoService.CreateTodo(token, requestTodoDto);
+        todoService.createTodo(token, requestTodoDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두리스트 생성 성공", null));
